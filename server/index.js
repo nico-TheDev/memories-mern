@@ -1,8 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-
+import * as dotenv from "dotenv";
 // ROUTES IMPORT
+
+dotenv.config();
 
 import postRoutes from "./routes/PostRoutes.js";
 
@@ -27,7 +29,7 @@ app.use(cors());
 
 app.use("/posts", postRoutes);
 
-const CONNECTION_URL = `mongodb+srv://nico:1234@cluster0.mwvo1.mongodb.net/?retryWrites=true&w=majority`;
+const CONNECTION_URL = process.env.MONGO_URI;
 const PORT = process.env.PORT || 5000;
 
 // MONGOOSE SETUP
