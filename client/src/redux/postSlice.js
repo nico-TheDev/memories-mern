@@ -2,12 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import * as api from "../api";
 
 export const getAllPosts = () => {
-    console.log("GET ALL POSTS");
     return async (dispatch, state) => {
         try {
             const { data } = await api.fetchPosts();
-            console.log(data);
-            dispatch(FETCH_ALL(data));
+            console.log(data.data);
+            dispatch(FETCH_ALL(data.data));
         } catch (err) {
             console.log(err);
         }
@@ -29,8 +28,8 @@ export const postSlice = createSlice({
     name: "posts",
     initialState: [],
     reducers: {
-        FETCH_ALL: (state) => {
-            return state.payload;
+        FETCH_ALL: (state, action) => {
+            return action.payload;
         },
         CREATE_POST: (state) => {
             return [...state, state.payload];
