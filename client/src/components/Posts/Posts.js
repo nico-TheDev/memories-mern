@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllPosts } from "../../reducers/posts";
+import { getAllPosts } from "../../redux/postSlice";
 import Post from "./Post/Post";
 
 function Posts() {
-    const posts = useSelector((state) => state.posts.value);
+    const posts = useSelector((state) => state.posts);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getAllPosts());
-        console.log(posts, "HAHA");
     }, [dispatch, posts]);
 
     return (

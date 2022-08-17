@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import FileBase from "react-file-base64";
-
+import { useDispatch } from "react-redux";
 import { TextField, Button, Paper, Typography } from "@mui/material";
 
 import classes from "./styles";
+import { createPost } from "../../redux/postSlice";
 
 function Form() {
+    const dispatch = useDispatch();
     const [postData, setPostData] = useState({
         creator: "",
         title: "",
@@ -14,7 +16,20 @@ function Form() {
         selectedFile: "",
     });
 
-    const handleSubmit = (e) => {};
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(createPost(postData));
+    };
+
+    const handleClear = () => {
+        setPostData({
+            creator: "",
+            title: "",
+            message: "",
+            tags: "",
+            selectedFile: "",
+        });
+    };
 
     return (
         <Paper sx={classes.paper}>
@@ -78,6 +93,25 @@ function Form() {
                         }
                     />
                 </div>
+                <Button
+                    sx={classes.buttonSubmit}
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    type="submit"
+                    fullWidth
+                >
+                    Submit
+                </Button>
+                <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    onClick={handleClear}
+                    fullWidth
+                >
+                    Clear
+                </Button>
             </form>
         </Paper>
     );

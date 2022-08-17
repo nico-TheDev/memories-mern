@@ -14,16 +14,30 @@ export const getAllPosts = () => {
     };
 };
 
+export const createPost = (newPost) => {
+    return async (dispatch, state) => {
+        try {
+            const { data } = await api.createPost(newPost);
+            dispatch(CREATE_POST(data));
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
+};
+
 export const postSlice = createSlice({
     name: "posts",
-    initialState: { value: [] },
+    initialState: [],
     reducers: {
         FETCH_ALL: (state) => {
             return state.payload;
         },
+        CREATE_POST: (state) => {
+            return [...state, state.payload];
+        },
     },
 });
 
-export const { FETCH_ALL } = postSlice.actions;
+export const { FETCH_ALL, CREATE_POST } = postSlice.actions;
 
 export default postSlice.reducer;

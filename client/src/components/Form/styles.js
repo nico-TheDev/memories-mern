@@ -17,7 +17,8 @@ const style = {
         margin: "10px 0",
     },
     buttonSubmit: {
-        marginBottom: 10,
+        marginBottom: 2,
+        marginTop: 2,
     },
 };
 
