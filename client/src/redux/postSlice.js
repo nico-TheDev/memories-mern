@@ -24,19 +24,35 @@ export const createPost = (newPost) => {
     };
 };
 
+export const updatePost = (id, updatedPost) => {
+    return async (dispatch, state) => {
+        try {
+            const { data } = await api.updatePost(id, updatedPost);
+            dispatch(UPDATE_POST(data));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+};
+
 export const postSlice = createSlice({
     name: "posts",
     initialState: [],
     reducers: {
-        FETCH_ALL: (state, action) => {
+        FETCH_ALL: (_, action) => {
             return action.payload;
         },
         CREATE_POST: (state) => {
             return [...state, state.payload];
         },
+        UPDATE_POST: (state, action) => {
+            return state.map((post) =>
+                post._id === action.payload._id ? action.payload : post
+            );
+        },
     },
 });
 
-export const { FETCH_ALL, CREATE_POST } = postSlice.actions;
+export const { FETCH_ALL, CREATE_POST, UPDATE_POST } = postSlice.actions;
 
 export default postSlice.reducer;

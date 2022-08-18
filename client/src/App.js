@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, AppBar, Typography, Grow, Grid } from "@mui/material";
 
 import memories from "./images/memories.png";
-import Posts from "./components/Posts/Posts";
+import PostList from "./components/PostList/PostList";
 import Form from "./components/Form/Form";
 
 import classes from "./styles";
 
 const App = () => {
+    const [currentId, setCurrentId] = useState(null);
+
     return (
         <Container maxWidth="lg">
             <AppBar position="static" color="inherit" sx={classes.appBar}>
@@ -30,10 +32,16 @@ const App = () => {
                         spacing={4}
                     >
                         <Grid item xs={12} sm={7}>
-                            <Posts />
+                            <PostList
+                                currentId={currentId}
+                                setCurrentId={setCurrentId}
+                            />
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <Form />
+                            <Form
+                                currentId={currentId}
+                                setCurrentId={setCurrentId}
+                            />
                         </Grid>
                     </Grid>
                 </Container>

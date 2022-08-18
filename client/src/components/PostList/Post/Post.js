@@ -15,7 +15,12 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 import classes from "./styles";
 
-function Post({ post }) {
+function Post({ post, setCurrentId }) {
+    const handleEdit = () => {
+        console.log("EDIT");
+        setCurrentId(post._id);
+    };
+
     return (
         <Card sx={classes.card}>
             <CardMedia
@@ -31,8 +36,13 @@ function Post({ post }) {
                 </Typography>
             </Box>
 
+            {/* EDIT BUTTON */}
             <Box sx={classes.overlay2}>
-                <Button sx={{ color: "white" }} size="small" onClick={() => {}}>
+                <Button
+                    sx={{ color: "white" }}
+                    size="small"
+                    onClick={handleEdit}
+                >
                     <MoreHorizIcon fontSize="default" />
                 </Button>
             </Box>
@@ -42,8 +52,11 @@ function Post({ post }) {
                     {post.tags.map((tag) => `#${tag} `)}
                 </Typography>
             </Box>
+            <Typography sx={classes.title} variant="h5" gutterBottom>
+                {post.title}
+            </Typography>
             <CardContent>
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="body2" color="textSecondary" gutterBottom>
                     {post.message}
                 </Typography>
             </CardContent>

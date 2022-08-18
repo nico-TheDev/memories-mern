@@ -6,13 +6,13 @@ import { getAllPosts } from "../../redux/postSlice";
 import classes from "./styles";
 import Post from "./Post/Post";
 
-function Posts() {
+function PostList({ setCurrentId, currentId }) {
     const posts = useSelector((state) => state.posts);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getAllPosts());
-    }, [dispatch]);
+    }, [dispatch, currentId]);
 
     console.log(posts.length);
 
@@ -27,11 +27,11 @@ function Posts() {
         >
             {posts.map((post) => (
                 <Grid key={post._id} item xs={12} sm={6}>
-                    <Post post={post} />
+                    <Post post={post} setCurrentId={setCurrentId} />
                 </Grid>
             ))}
         </Grid>
     );
 }
 
-export default Posts;
+export default PostList;
