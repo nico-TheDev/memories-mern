@@ -15,7 +15,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useDispatch } from "react-redux";
 
 import classes from "./styles";
-import { deletePost } from "../../../redux/postSlice";
+import { deletePost, likePost } from "../../../redux/postSlice";
 
 function Post({ post, setCurrentId }) {
     const dispatch = useDispatch();
@@ -28,6 +28,11 @@ function Post({ post, setCurrentId }) {
     const handleDelete = () => {
         console.log("DELETE");
         dispatch(deletePost(post._id));
+    };
+
+    const handleLike = () => {
+        console.log("LIKE");
+        dispatch(likePost(post._id));
     };
 
     return (
@@ -71,7 +76,7 @@ function Post({ post, setCurrentId }) {
             </CardContent>
 
             <CardActions sx={classes.cardActions}>
-                <Button size="small" color="primary" onClick={() => {}}>
+                <Button size="small" color="primary" onClick={handleLike}>
                     <ThumbUpAltIcon fontSize="small" />
                     &nbsp; Like &nbsp;{post.likeCount}
                 </Button>

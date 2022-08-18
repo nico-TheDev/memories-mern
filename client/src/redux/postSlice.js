@@ -44,6 +44,16 @@ export const deletePost = (id) => {
     };
 };
 
+export const likePost = (id) => {
+    return async (dispatch, state) => {
+        try {
+            const { data: updatedPost } = await api.likePost(id);
+            console.log(updatedPost);
+            dispatch(UPDATE_POST(updatedPost));
+        } catch (err) {}
+    };
+};
+
 export const postSlice = createSlice({
     name: "posts",
     initialState: [],
