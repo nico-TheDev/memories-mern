@@ -35,6 +35,15 @@ export const updatePost = (id, updatedPost) => {
     };
 };
 
+export const deletePost = (id) => {
+    return async (dispatch, state) => {
+        try {
+            await api.deletePost(id);
+            dispatch(DELETE_POST(id));
+        } catch (err) {}
+    };
+};
+
 export const postSlice = createSlice({
     name: "posts",
     initialState: [],
@@ -50,9 +59,13 @@ export const postSlice = createSlice({
                 post._id === action.payload._id ? action.payload : post
             );
         },
+        DELETE_POST: (state, action) => {
+            return state.filter((post) => post._id !== action.payload);
+        },
     },
 });
 
-export const { FETCH_ALL, CREATE_POST, UPDATE_POST } = postSlice.actions;
+export const { FETCH_ALL, CREATE_POST, UPDATE_POST, DELETE_POST } =
+    postSlice.actions;
 
 export default postSlice.reducer;

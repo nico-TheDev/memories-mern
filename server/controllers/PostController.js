@@ -10,7 +10,7 @@ export const getPosts = async (req, res) => {
         res.status(200).json({ data: postMessages });
     } catch (err) {
         res.status(404).json({
-            message: error.message,
+            message: error,
         });
     }
 };
@@ -24,7 +24,7 @@ export const createPost = async (req, res) => {
 
         res.status(201).json(newPost);
     } catch (err) {
-        res.status(409).json({ message: err.message });
+        res.status(409).json({ message: err });
     }
 };
 
@@ -36,13 +36,32 @@ export const updatePost = async (req, res) => {
         return res.status(404).send("No Post with that ID");
     }
 
-    const updatedPost = await PostMessage.findByIdAndUpdate(
-        id,
-        { ...post, _id: id },
-        {
-            new: true,
-        }
-    );
+    try {
+        const updatedPost = await PostMessage.findByIdAndUpdate(
+            id,
+            { ...post, _id: id },
+            {
+                new: true,
+            }
+        );
 
-    res.status(200).json(updatedPost);
+        res.status(200).json(updatedPost);
+    } catch (err) {
+        res.status(409).json({ message: err });
+    }
+};
+
+export const deletePost = async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).send("No Post with that ID");
+    }
+
+    try {
+        await PostMessage.findByIdAndDelete(id);
+        res.status(200).json("Post Deleted Successfully");
+    } catch (err) {
+        res.status(409).json({ message: err });
+    }
 };

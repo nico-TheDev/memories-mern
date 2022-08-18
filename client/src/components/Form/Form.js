@@ -8,7 +8,7 @@ import { createPost, updatePost } from "../../redux/postSlice";
 
 function Form({ currentId, setCurrentId }) {
     const post = useSelector((state) =>
-        state.posts.find((post) => post._id === currentId)
+        currentId ? state.posts.find((post) => post._id === currentId) : null
     );
     const dispatch = useDispatch();
     const [postData, setPostData] = useState({
