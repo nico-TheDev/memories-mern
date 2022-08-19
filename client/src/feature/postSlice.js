@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as api from "../api";
 
+// THUNKS | ASYNC CODE
+
 export const getAllPosts = () => {
-    return async (dispatch, state) => {
+    return async (dispatch) => {
         try {
             const { data } = await api.fetchPosts();
             console.log(data.data);
@@ -14,7 +16,7 @@ export const getAllPosts = () => {
 };
 
 export const createPost = (newPost) => {
-    return async (dispatch, state) => {
+    return async (dispatch) => {
         try {
             const { data } = await api.createPost(newPost);
             dispatch(CREATE_POST(data));
@@ -25,7 +27,7 @@ export const createPost = (newPost) => {
 };
 
 export const updatePost = (id, updatedPost) => {
-    return async (dispatch, state) => {
+    return async (dispatch) => {
         try {
             const { data } = await api.updatePost(id, updatedPost);
             dispatch(UPDATE_POST(data));
@@ -36,7 +38,7 @@ export const updatePost = (id, updatedPost) => {
 };
 
 export const deletePost = (id) => {
-    return async (dispatch, state) => {
+    return async (dispatch) => {
         try {
             await api.deletePost(id);
             dispatch(DELETE_POST(id));
@@ -45,7 +47,7 @@ export const deletePost = (id) => {
 };
 
 export const likePost = (id) => {
-    return async (dispatch, state) => {
+    return async (dispatch) => {
         try {
             const { data: updatedPost } = await api.likePost(id);
             console.log(updatedPost);

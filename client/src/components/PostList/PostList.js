@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid, CircularProgress } from "@mui/material";
 
-import { getAllPosts } from "../../redux/postSlice";
+import { getAllPosts } from "../../feature/postSlice";
 import classes from "./styles";
 import Post from "./Post/Post";
 

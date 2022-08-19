@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TextField, Button, Paper, Typography } from "@mui/material";
 
 import classes from "./styles";
-import { createPost, updatePost } from "../../redux/postSlice";
+import { createPost, updatePost } from "../../feature/postSlice";
 
 function Form({ currentId, setCurrentId }) {
     const post = useSelector((state) =>

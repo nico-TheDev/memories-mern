@@ -15,7 +15,7 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useDispatch } from "react-redux";
 
 import classes from "./styles";
-import { deletePost, likePost } from "../../../redux/postSlice";
+import { deletePost, likePost } from "../../../feature/postSlice";
 
 function Post({ post, setCurrentId }) {
     const dispatch = useDispatch();
@@ -63,7 +63,7 @@ function Post({ post, setCurrentId }) {
 
             <Box sx={classes.details}>
                 <Typography variant="body2" color="textSecondary">
-                    {post.tags.map((tag) => `#${tag} `)}
+                    {post.tags[0].split(",").map((tag) => `#${tag} `)}
                 </Typography>
             </Box>
             <Typography sx={classes.title} variant="h5" gutterBottom>
