@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import postRoutes from "./routes/PostRoutes.js";
+import userRoutes from "./routes/UserRoutes.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(cors());
 // ROUTES
 
 app.use("/posts", postRoutes);
+app.use("/user", userRoutes);
 
 const CONNECTION_URL = process.env.MONGO_URI;
 const PORT = process.env.PORT || 5000;

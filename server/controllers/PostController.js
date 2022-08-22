@@ -69,20 +69,29 @@ export const deletePost = async (req, res) => {
 export const likePost = async (req, res) => {
     const { id } = req.params;
 
+    if (!req.userId)
+        return res.status(400).json({ message: "Unauthorized Token" });
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).send("No Post with that ID");
     }
 
     try {
         const post = await PostMessage.findById(id);
-        console.log("LIKE");
-        const updatedPost = await PostMessage.findByIdAndUpdate(
-            id,
-            {
-                likeCount: post.likeCount + 1,
-            },
-            { new: true }
-        );
+
+        const index = post.likes.findIndex((id) => id === String(req.userId));
+
+        // LIKE POST
+        if (index === -1) {
+            post.likes.push(req.userId);
+        } else {
+            // DISLIKE POST
+            post.likes = post.likes.filter((id) => id !== String(req.userId));
+        }
+
+        const updatedPost = await PostMessage.findByIdAndUpdate(id, post, {
+            new: true,
+        });
 
         res.status(200).json(updatedPost);
     } catch (err) {
