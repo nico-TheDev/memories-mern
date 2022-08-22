@@ -46,6 +46,7 @@ function Form({ currentId, setCurrentId }) {
             tags: "",
             selectedFile: "",
         });
+        setCurrentId(null);
     };
 
     return (
@@ -56,7 +57,9 @@ function Form({ currentId, setCurrentId }) {
                 sx={classes.form}
                 onSubmit={handleSubmit}
             >
-                <Typography variant="h6">Creating a memory</Typography>
+                <Typography variant="h6">
+                    {currentId ? "Editing a memoir" : "Creating a memoir"}
+                </Typography>
                 <TextField
                     sx={classes.fileInput}
                     name="creator"

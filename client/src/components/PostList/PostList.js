@@ -7,7 +7,7 @@ import Post from "./Post/Post";
 
 function PostList({ setCurrentId, currentId }) {
     const posts = useSelector((state) => state.posts);
-
+    console.log(posts);
     return !posts.length ? (
         <CircularProgress />
     ) : (

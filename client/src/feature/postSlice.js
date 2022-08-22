@@ -63,8 +63,8 @@ export const postSlice = createSlice({
         FETCH_ALL: (_, action) => {
             return action.payload;
         },
-        CREATE_POST: (state) => {
-            return [...state, state.payload];
+        CREATE_POST: (state, action) => {
+            return [...state, action.payload];
         },
         UPDATE_POST: (state, action) => {
             return state.map((post) =>

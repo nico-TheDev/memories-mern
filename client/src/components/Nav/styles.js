@@ -25,7 +25,7 @@ const style = {
     profile: {
         display: "flex",
         justifyContent: "space-between",
-        width: "200px",
+        gap: 2,
     },
     userName: {
         display: "flex",

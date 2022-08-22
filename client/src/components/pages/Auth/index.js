@@ -16,18 +16,42 @@ import jwtDecode from "jwt-decode";
 import { GET_USER } from "../../../feature/authSlice";
 import Input from "./Input";
 import classes from "./styles";
+import { useNavigate } from "react-router-dom";
+
+const initialState = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+};
 
 function AuthPage() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState(initialState);
     const [isSignup, setIsSignup] = useState(false);
     const [isPasswordShown, setIsPasswordShown] = useState(false);
 
     const handleShowPassword = () => {
-        setIsPasswordShown(!isPasswordShown);
+        setIsPasswordShown((prevState) => !prevState);
     };
-    const handleSubmit = () => {};
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
 
-    const handleChange = () => {};
+        if (isSignup) {
+            // SIGN UP LOGIC
+        } else {
+            // SIGN IN LOGIC
+        }
+
+        navigate("/");
+    };
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     const handleSwitchMode = () => {
         setIsSignup(!isSignup);
@@ -36,6 +60,7 @@ function AuthPage() {
     const handleLoginSuccess = (response) => {
         const { email, name, picture } = jwtDecode(response.credential);
         dispatch(GET_USER({ email, name, picture }));
+        navigate("/");
     };
 
     const handleLoginError = (response) => {
@@ -63,12 +88,14 @@ function AuthPage() {
                                     handleChange={handleChange}
                                     half
                                     autoFocus
+                                    value={formData.firstName}
                                 />
                                 <Input
                                     name="lastName"
                                     label="Last Name"
                                     handleChange={handleChange}
                                     half
+                                    value={formData.lastName}
                                 />
                             </>
                         )}
@@ -76,6 +103,7 @@ function AuthPage() {
                             name="email"
                             label="Email Address"
                             handleChange={handleChange}
+                            value={formData.email}
                         />
                         <Input
                             name="password"
@@ -83,6 +111,7 @@ function AuthPage() {
                             handleChange={handleChange}
                             type={isPasswordShown ? "text" : "password"}
                             handleShowPassword={handleShowPassword}
+                            value={formData.password}
                         />
                         {isSignup && (
                             <Input
@@ -90,11 +119,17 @@ function AuthPage() {
                                 label="Repeat Password"
                                 handleChange={handleChange}
                                 type="password"
+                                value={formData.confirmPassword}
                             />
                         )}
                     </Grid>
                     <Box my={2}>
-                        <Button variant="contained" fullWidth color="primary">
+                        <Button
+                            variant="contained"
+                            fullWidth
+                            color="primary"
+                            type="submit"
+                        >
                             {isSignup ? "Sign Up" : "Sign In"}
                         </Button>
                     </Box>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
     AppBar,
     Avatar,
@@ -7,13 +7,22 @@ import {
     Button,
     Box,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import memories from "../../images/memories.png";
 import classes from "./styles";
+import { useDispatch, useSelector } from "react-redux";
+import { LOGOUT } from "../../feature/authSlice";
 
 function Nav() {
-    const user = null;
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        dispatch(LOGOUT());
+        navigate("/");
+    };
 
     return (
         <AppBar position="static" color="inherit" sx={classes.appBar}>
@@ -25,7 +34,7 @@ function Nav() {
                     align="center"
                     sx={classes.heading}
                 >
-                    Memories
+                    Memoir
                 </Typography>
                 <img
                     src={memories}
@@ -40,15 +49,19 @@ function Nav() {
                     <Box sx={classes.profile}>
                         <Avatar
                             sx={classes.purple}
-                            alt={user.result.name}
-                            src={user.result.imageUrl}
+                            alt={user.name}
+                            src={user.picture}
                         >
-                            {user.result.name.charAt(0)}
+                            {user.name.charAt(0)}
                         </Avatar>
                         <Typography sx={classes.userName} variant="h6">
-                            {user.result.name}
+                            {user.name}
                         </Typography>
-                        <Button variant="contained" color="secondary">
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={handleLogout}
+                        >
                             Logout
                         </Button>
                     </Box>

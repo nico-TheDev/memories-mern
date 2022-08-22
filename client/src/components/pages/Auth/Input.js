@@ -21,24 +21,21 @@ function Input({
                 required
                 fullWidth
                 label={label}
+                type={type}
                 autoFocus={autoFocus}
-                InputProps={
-                    name === "password"
-                        ? {
-                              endAdornment: (
-                                  <InputAdornment position="end">
-                                      <IconButton onClick={handleShowPassword}>
-                                          {type === "password" ? (
-                                              <VisibilityOffIcon />
-                                          ) : (
-                                              <VisibilityIcon />
-                                          )}
-                                      </IconButton>
-                                  </InputAdornment>
-                              ),
-                          }
-                        : {}
-                }
+                InputProps={{
+                    endAdornment: name === "password" && (
+                        <InputAdornment position="end">
+                            <IconButton onClick={handleShowPassword}>
+                                {type === "password" ? (
+                                    <VisibilityOffIcon />
+                                ) : (
+                                    <VisibilityIcon />
+                                )}
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                }}
             />
         </Grid>
     );
