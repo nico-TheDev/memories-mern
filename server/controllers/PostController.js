@@ -16,9 +16,16 @@ export const getPosts = async (req, res) => {
 };
 export const createPost = async (req, res) => {
     const post = req.body.data;
-    console.log(post);
 
-    const newPost = new PostMessage(post);
+    if (!req.userId)
+        return res.status(400).json({ message: "Unauthorized Token" });
+
+    const newPost = new PostMessage({
+        ...post,
+        creator: req.userId,
+        createdAt: new Date().toISOString(),
+        name: post.creator,
+    });
     try {
         await newPost.save();
 
