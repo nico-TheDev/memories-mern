@@ -11,9 +11,8 @@ import {
 import LockIcon from "@mui/icons-material/Lock";
 import { GoogleLogin } from "@react-oauth/google";
 import { useDispatch } from "react-redux";
-import jwtDecode from "jwt-decode";
 
-import { GET_USER } from "../../../feature/authSlice";
+import { GET_USER, signup, signin } from "../../../feature/authSlice";
 import Input from "./Input";
 import classes from "./styles";
 import { useNavigate } from "react-router-dom";
@@ -42,8 +41,10 @@ function AuthPage() {
 
         if (isSignup) {
             // SIGN UP LOGIC
+            dispatch(signup(formData));
         } else {
             // SIGN IN LOGIC
+            dispatch(signin(formData));
         }
 
         navigate("/");
@@ -58,8 +59,7 @@ function AuthPage() {
     };
 
     const handleLoginSuccess = (response) => {
-        const { email, name, picture } = jwtDecode(response.credential);
-        dispatch(GET_USER({ email, name, picture }));
+        dispatch(GET_USER(response.credential));
         navigate("/");
     };
 

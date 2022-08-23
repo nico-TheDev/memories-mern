@@ -21,17 +21,14 @@ function Post({ post, setCurrentId }) {
     const dispatch = useDispatch();
 
     const handleEdit = () => {
-        console.log("EDIT");
         setCurrentId(post._id);
     };
 
     const handleDelete = () => {
-        console.log("DELETE");
         dispatch(deletePost(post._id));
     };
 
     const handleLike = () => {
-        console.log("LIKE");
         dispatch(likePost(post._id));
     };
 
@@ -44,7 +41,7 @@ function Post({ post, setCurrentId }) {
             />
 
             <Box sx={classes.overlay}>
-                <Typography variant="h6">{post.creator}</Typography>
+                <Typography variant="h6">{post.name}</Typography>
                 <Typography variant="body2">
                     {moment(post.createdAt).fromNow()}
                 </Typography>

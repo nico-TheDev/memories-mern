@@ -1,14 +1,33 @@
 import axios from "axios";
 
-const url = `http://localhost:5000/posts`;
+const apiInstance = axios.create({
+    baseURL: "http://localhost:5000",
+});
 
-export const fetchPosts = () => axios.get(url);
+apiInstance.interceptors.request.use((req) => {
+    if (localStorage.getItem("token")) {
+        const token = JSON.parse(localStorage.getItem("token"));
+        req.headers.Authorization = `Bearer ${token}`;
+    }
 
-export const createPost = (newPost) => axios.post(url, { data: newPost });
+    return req;
+});
+
+export const fetchPosts = () => apiInstance.get("/posts");
+
+export const createPost = (newPost) =>
+    apiInstance.post("/posts", { data: newPost });
 
 export const updatePost = (id, updatedPost) =>
-    axios.patch(`${url}/${id}`, { data: updatedPost });
+    apiInstance.patch(`${"/posts"}/${id}`, { data: updatedPost });
 
-export const deletePost = (id) => axios.delete(`${url}/${id}`);
+export const deletePost = (id) => apiInstance.delete(`${"/posts"}/${id}`);
 
-export const likePost = (id) => axios.patch(`${url}/${id}/like`);
+export const likePost = (id) => apiInstance.patch(`${"/posts"}/${id}/like`);
+
+// AUTH
+
+export const signIn = (formData) =>
+    apiInstance.post("/user/signin", { data: formData });
+export const signUp = (formData) =>
+    apiInstance.post("/user/signup", { data: formData });

@@ -10,9 +10,9 @@ function Form({ currentId, setCurrentId }) {
     const post = useSelector((state) =>
         currentId ? state.posts.find((post) => post._id === currentId) : null
     );
+    const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
     const [postData, setPostData] = useState({
-        creator: "",
         title: "",
         message: "",
         tags: "",
@@ -22,17 +22,17 @@ function Form({ currentId, setCurrentId }) {
     useEffect(() => {
         if (currentId) {
             setPostData(post);
-            console.log(post);
         }
     }, [currentId, post]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         if (currentId) {
-            dispatch(updatePost(currentId, postData));
+            dispatch(
+                updatePost(currentId, { creator: user.name, ...postData })
+            );
         } else {
-            dispatch(createPost(postData));
+            dispatch(createPost({ creator: user.name, ...postData }));
         }
         setCurrentId(null);
         handleClear();
@@ -40,11 +40,10 @@ function Form({ currentId, setCurrentId }) {
 
     const handleClear = () => {
         setPostData({
-            creator: "",
             title: "",
             message: "",
             tags: "",
-            selectedFile: "",
+            selectedFile: null,
         });
         setCurrentId(null);
     };
@@ -60,17 +59,6 @@ function Form({ currentId, setCurrentId }) {
                 <Typography variant="h6">
                     {currentId ? "Editing a memoir" : "Creating a memoir"}
                 </Typography>
-                <TextField
-                    sx={classes.fileInput}
-                    name="creator"
-                    variant="outlined"
-                    label="Creator"
-                    fullWidth
-                    value={postData.creator}
-                    onChange={(e) =>
-                        setPostData({ ...postData, creator: e.target.value })
-                    }
-                />
                 <TextField
                     sx={classes.fileInput}
                     name="title"

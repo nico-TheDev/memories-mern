@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as api from "../api";
+import toast from "react-hot-toast";
 
 // THUNKS | ASYNC CODE
 
@@ -7,7 +8,6 @@ export const getAllPosts = () => {
     return async (dispatch) => {
         try {
             const { data } = await api.fetchPosts();
-            console.log(data.data);
             dispatch(FETCH_ALL(data.data));
         } catch (err) {
             console.log(err);
@@ -18,9 +18,13 @@ export const getAllPosts = () => {
 export const createPost = (newPost) => {
     return async (dispatch) => {
         try {
+            const loader = toast.loading("Creating Memoir");
             const { data } = await api.createPost(newPost);
             dispatch(CREATE_POST(data));
+            toast.dismiss(loader);
+            toast.success("Memoir Created");
         } catch (err) {
+            toast.error(err.message);
             console.log(err.message);
         }
     };
@@ -29,9 +33,13 @@ export const createPost = (newPost) => {
 export const updatePost = (id, updatedPost) => {
     return async (dispatch) => {
         try {
+            const loader = toast.loading("Updating Memoir");
             const { data } = await api.updatePost(id, updatedPost);
             dispatch(UPDATE_POST(data));
+            toast.dismiss(loader);
+            toast.success("Memoir Updated");
         } catch (err) {
+            toast.error(err.message);
             console.log(err);
         }
     };
@@ -40,9 +48,15 @@ export const updatePost = (id, updatedPost) => {
 export const deletePost = (id) => {
     return async (dispatch) => {
         try {
+            const loader = toast.loading("Deleting Memoir");
             await api.deletePost(id);
             dispatch(DELETE_POST(id));
-        } catch (err) {}
+            toast.dismiss(loader);
+            toast.success("Memoir Deleted");
+        } catch (err) {
+            toast.error(err.message);
+            console.log(err);
+        }
     };
 };
 
@@ -50,7 +64,6 @@ export const likePost = (id) => {
     return async (dispatch) => {
         try {
             const { data: updatedPost } = await api.likePost(id);
-            console.log(updatedPost);
             dispatch(UPDATE_POST(updatedPost));
         } catch (err) {}
     };

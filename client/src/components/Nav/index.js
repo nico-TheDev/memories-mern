@@ -49,10 +49,10 @@ function Nav() {
                     <Box sx={classes.profile}>
                         <Avatar
                             sx={classes.purple}
-                            alt={user.name}
-                            src={user.picture}
+                            alt={user?.name}
+                            src={user?.picture}
                         >
-                            {user.name.charAt(0)}
+                            {user?.name?.charAt(0)}
                         </Avatar>
                         <Typography sx={classes.userName} variant="h6">
                             {user.name}

@@ -1,6 +1,7 @@
 import React from "react";
 import { Container } from "@mui/material";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import Nav from "./components/Nav";
 // PAGES
@@ -10,6 +11,7 @@ import AuthPage from "./components/pages/Auth";
 const App = () => {
     return (
         <Container maxWidth="lg">
+            <Toaster />
             <Nav />
             <Routes>
                 <Route path="/" element={<HomePage />} />

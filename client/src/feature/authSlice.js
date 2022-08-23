@@ -1,9 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
+import jwtDecode from "jwt-decode";
+
+import * as api from "../api";
 
 const initialState = {
     user: localStorage.getItem("user")
         ? JSON.parse(localStorage.getItem("user"))
         : null,
+    token: null,
 };
 
 // THUNK
@@ -11,7 +15,8 @@ const initialState = {
 export const signin = (formData) => {
     return async (dispatch, state) => {
         try {
-            dispatch(SIGNIN(formData));
+            const { data } = await api.signIn(formData);
+            dispatch(SIGNIN(data));
         } catch (err) {
             console.log(err);
         }
@@ -21,7 +26,8 @@ export const signin = (formData) => {
 export const signup = (formData) => {
     return async (dispatch, state) => {
         try {
-            dispatch(SIGNUP(formData));
+            const { data } = await api.signUp(formData);
+            dispatch(SIGNUP(data));
         } catch (err) {
             console.log(err);
         }
@@ -33,15 +39,34 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         GET_USER: (state, action) => {
-            localStorage.setItem("user", JSON.stringify(action.payload));
-            state.user = action.payload;
+            const { email, name, picture } = jwtDecode(action.payload);
+            localStorage.setItem(
+                "user",
+                JSON.stringify({ email, name, picture })
+            );
+            localStorage.setItem("token", JSON.stringify(action.payload));
+            state.user = { email, name, picture };
         },
         LOGOUT: (state) => {
             localStorage.clear();
             state.user = null;
         },
-        SIGNIN: (state) => {},
-        SIGNUP: (state) => {},
+        SIGNIN: (state, action) => {
+            localStorage.setItem("user", JSON.stringify(action.payload.result));
+            localStorage.setItem("token", JSON.stringify(action.payload.token));
+            return (state = {
+                user: action.payload.result,
+                token: action.payload.token,
+            });
+        },
+        SIGNUP: (state, action) => {
+            localStorage.setItem("user", JSON.stringify(action.payload.result));
+            localStorage.setItem("token", JSON.stringify(action.payload.token));
+            return (state = {
+                user: action.payload.result,
+                token: action.payload.token,
+            });
+        },
     },
 });
 
