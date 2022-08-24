@@ -63,8 +63,11 @@ export const deletePost = (id) => {
 export const likePost = (id) => {
     return async (dispatch) => {
         try {
+            const loader = toast.loading("Liking Memoir");
             const { data: updatedPost } = await api.likePost(id);
             dispatch(UPDATE_POST(updatedPost));
+            toast.dismiss(loader);
+            toast.success("Liked Successful");
         } catch (err) {}
     };
 };

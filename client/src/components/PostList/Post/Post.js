@@ -9,16 +9,18 @@ import {
     Box,
 } from "@mui/material";
 import moment from "moment";
-import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { useDispatch } from "react-redux";
+import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
+import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
+import { useDispatch, useSelector } from "react-redux";
 
 import classes from "./styles";
 import { deletePost, likePost } from "../../../feature/postSlice";
 
 function Post({ post, setCurrentId }) {
     const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
 
     const handleEdit = () => {
         setCurrentId(post._id);
@@ -30,6 +32,33 @@ function Post({ post, setCurrentId }) {
 
     const handleLike = () => {
         dispatch(likePost(post._id));
+    };
+    const likeCount = post.likes.length;
+
+    const isOwner = user?._id === post?.creator;
+
+    const Likes = () => {
+        if (likeCount > 0) {
+            return post.likes.find((like) => like === user?._id) ? (
+                <>
+                    <ThumbUpAltIcon fontSize="small" /> &nbsp;{" "}
+                    {likeCount > 2
+                        ? `You and ${likeCount} others`
+                        : `${likeCount} like${likeCount > 1 ? "s" : ""}`}
+                </>
+            ) : (
+                <>
+                    <ThumbUpAltOutlinedIcon fontSize="small" /> &nbsp;
+                    {likeCount} {likeCount === 1 ? "Like" : "Likes"}
+                </>
+            );
+        }
+
+        return (
+            <>
+                <ThumbUpAltOutlinedIcon fontSize="small" /> &nbsp; Like
+            </>
+        );
     };
 
     return (
@@ -48,15 +77,17 @@ function Post({ post, setCurrentId }) {
             </Box>
 
             {/* EDIT BUTTON */}
-            <Box sx={classes.overlay2}>
-                <Button
-                    sx={{ color: "white" }}
-                    size="small"
-                    onClick={handleEdit}
-                >
-                    <MoreHorizIcon fontSize="default" />
-                </Button>
-            </Box>
+            {isOwner && (
+                <Box sx={classes.overlay2}>
+                    <Button
+                        sx={{ color: "white" }}
+                        size="small"
+                        onClick={handleEdit}
+                    >
+                        <MoreHorizIcon fontSize="medium" />
+                    </Button>
+                </Box>
+            )}
 
             <Box sx={classes.details}>
                 <Typography variant="body2" color="textSecondary">
@@ -73,14 +104,20 @@ function Post({ post, setCurrentId }) {
             </CardContent>
 
             <CardActions sx={classes.cardActions}>
-                <Button size="small" color="primary" onClick={handleLike}>
-                    <ThumbUpAltIcon fontSize="small" />
-                    &nbsp; Like &nbsp;{post.likeCount}
+                <Button
+                    size="small"
+                    color="primary"
+                    onClick={handleLike}
+                    disabled={!user}
+                >
+                    <Likes />
                 </Button>
-                <Button size="small" color="primary" onClick={handleDelete}>
-                    <DeleteIcon fontSize="small" />
-                    &nbsp; Delete
-                </Button>
+                {isOwner && (
+                    <Button size="small" color="primary" onClick={handleDelete}>
+                        <DeleteIcon fontSize="small" />
+                        &nbsp; Delete
+                    </Button>
+                )}
             </CardActions>
         </Card>
     );

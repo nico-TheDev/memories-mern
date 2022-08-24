@@ -7,7 +7,8 @@ import {
     Button,
     Box,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import decode from "jwt-decode";
 
 import memories from "../../images/memories.png";
 import classes from "./styles";
@@ -17,12 +18,24 @@ import { LOGOUT } from "../../feature/authSlice";
 function Nav() {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.user);
+    const token = useSelector((state) => state.auth.token);
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogout = () => {
         dispatch(LOGOUT());
         navigate("/");
     };
+
+    useEffect(() => {
+        if (token) {
+            const decodedToken = decode(token);
+
+            if (decodedToken.exp * 1000 < new Date().getTime()) {
+                handleLogout();
+            }
+        }
+    }, [location]);
 
     return (
         <AppBar position="static" color="inherit" sx={classes.appBar}>

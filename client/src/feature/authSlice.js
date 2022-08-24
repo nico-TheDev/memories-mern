@@ -39,13 +39,15 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         GET_USER: (state, action) => {
-            const { email, name, picture } = jwtDecode(action.payload);
+            const googleUser = jwtDecode(action.payload);
+            console.log(googleUser);
+            const { email, name, picture, sub: googleId } = googleUser;
             localStorage.setItem(
                 "user",
-                JSON.stringify({ email, name, picture })
+                JSON.stringify({ email, name, picture, _id: googleId })
             );
             localStorage.setItem("token", JSON.stringify(action.payload));
-            state.user = { email, name, picture };
+            state.user = { email, name, picture, _id: googleId };
         },
         LOGOUT: (state) => {
             localStorage.clear();
