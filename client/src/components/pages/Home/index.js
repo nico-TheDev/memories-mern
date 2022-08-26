@@ -8,8 +8,10 @@ import {
     Typography,
     AppBar,
     TextField,
-    Chip,
+    Button,
 } from "@mui/material";
+import ChipInput from "material-ui-chip-input";
+import { useNavigate } from "react-router-dom";
 
 import { getAllPosts } from "../../../feature/postSlice";
 import PostList from "../../PostList/PostList";
@@ -18,7 +20,9 @@ import Pagination from "../../Pagination";
 import classes from "./styles";
 
 function HomePage() {
+    const navigate = useNavigate();
     const [currentId, setCurrentId] = useState(null);
+    const [tags, setTags] = useState([]);
     const [search, setSearch] = useState("");
     const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
@@ -27,14 +31,26 @@ function HomePage() {
         dispatch(getAllPosts());
     }, [dispatch, currentId]);
 
+    const searchPosts = () => {
+        if (search.trim()) {
+        } else {
+            navigate("/");
+        }
+    };
+
     const handleKeyPress = (e) => {
-        if (e.key === ",") {
-            console.log("CHIP");
+        if (e.key === "Enter") {
+            searchPosts();
         }
     };
     const handleSearch = (e) => {
         setSearch(e.target.value);
     };
+
+    const handleAddTags = (tag) => setTags([...tags, tag]);
+
+    const handleDeleteTags = (tag) =>
+        setTags(tags.filter((current) => current !== tag));
 
     return (
         <Grow in>
@@ -72,6 +88,21 @@ function HomePage() {
                                 onChange={handleSearch}
                                 onKeyDown={handleKeyPress}
                             />
+                            <ChipInput
+                                style={{ margin: "16px 0" }}
+                                value={tags}
+                                onAdd={handleAddTags}
+                                onDelete={handleDeleteTags}
+                                label="Search Tags"
+                                variant="outlined"
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={searchPosts}
+                            >
+                                Search
+                            </Button>
                         </AppBar>
                         {user ? (
                             <Form
