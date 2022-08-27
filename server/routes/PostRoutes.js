@@ -5,11 +5,13 @@ import {
     updatePost,
     deletePost,
     likePost,
+    getPostsBySearch,
 } from "../controllers/PostController.js";
 import verifyAuth from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+router.get("/search", getPostsBySearch);
 router.get("/", getPosts);
 router.post("/", verifyAuth, createPost);
 router.patch("/:id", verifyAuth, updatePost);

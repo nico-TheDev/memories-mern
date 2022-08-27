@@ -5,8 +5,6 @@ export const getPosts = async (req, res) => {
     try {
         const postMessages = await PostMessage.find();
 
-        console.log(postMessages);
-
         res.status(200).json({ data: postMessages });
     } catch (err) {
         res.status(404).json({
@@ -14,6 +12,24 @@ export const getPosts = async (req, res) => {
         });
     }
 };
+
+export const getPostsBySearch = async (req, res) => {
+    const { searchQuery, tags } = req.query;
+    console.log(searchQuery);
+    console.log(tags);
+
+    try {
+        const title = new RegExp(searchQuery, "i");
+        const posts = await PostMessage.find({
+            $or: [{ title }, { tags: { $in: tags.split(",") } }],
+        });
+        console.log(posts);
+        res.status(200).json({ posts });
+    } catch (err) {
+        res.status(404).json({ message: err });
+    }
+};
+
 export const createPost = async (req, res) => {
     const post = req.body.data;
 
@@ -25,6 +41,7 @@ export const createPost = async (req, res) => {
         creator: req.userId,
         createdAt: new Date().toISOString(),
         name: post.creator,
+        tags: post.tags.split(","),
     });
     try {
         await newPost.save();
