@@ -15,6 +15,13 @@ apiInstance.interceptors.request.use((req) => {
 
 export const fetchPosts = () => apiInstance.get("/posts");
 
+export const fetchPostsBySearch = (searchQuery) =>
+    apiInstance.get(
+        `/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${
+            searchQuery.tags
+        }`
+    );
+
 export const createPost = (newPost) =>
     apiInstance.post("/posts", { data: newPost });
 

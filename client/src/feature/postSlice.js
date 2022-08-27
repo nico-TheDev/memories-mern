@@ -10,6 +10,19 @@ export const getAllPosts = () => {
             const { data } = await api.fetchPosts();
             dispatch(FETCH_ALL(data.data));
         } catch (err) {
+            toast.error(err.message);
+            console.log(err);
+        }
+    };
+};
+
+export const getPostsBySearch = (searchQuery) => {
+    return async (dispatch) => {
+        try {
+            const { data } = await api.fetchPostsBySearch(searchQuery);
+            dispatch(FETCH_BY_SEARCH(data.posts));
+        } catch (err) {
+            toast.error(err.message);
             console.log(err);
         }
     };
@@ -68,7 +81,10 @@ export const likePost = (id) => {
             dispatch(UPDATE_POST(updatedPost));
             toast.dismiss(loader);
             toast.success("Liked Successful");
-        } catch (err) {}
+        } catch (err) {
+            toast.error(err.message);
+            console.log(err);
+        }
     };
 };
 
@@ -76,7 +92,10 @@ export const postSlice = createSlice({
     name: "posts",
     initialState: [],
     reducers: {
-        FETCH_ALL: (_, action) => {
+        FETCH_ALL: (state, action) => {
+            return action.payload;
+        },
+        FETCH_BY_SEARCH: (state, action) => {
             return action.payload;
         },
         CREATE_POST: (state, action) => {
@@ -93,7 +112,12 @@ export const postSlice = createSlice({
     },
 });
 
-export const { FETCH_ALL, CREATE_POST, UPDATE_POST, DELETE_POST } =
-    postSlice.actions;
+export const {
+    FETCH_ALL,
+    CREATE_POST,
+    UPDATE_POST,
+    DELETE_POST,
+    FETCH_BY_SEARCH,
+} = postSlice.actions;
 
 export default postSlice.reducer;

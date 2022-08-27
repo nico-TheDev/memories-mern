@@ -91,7 +91,7 @@ function Post({ post, setCurrentId }) {
 
             <Box sx={classes.details}>
                 <Typography variant="body2" color="textSecondary">
-                    {post.tags[0].split(",").map((tag) => `#${tag} `)}
+                    {post.tags.map((tag) => `#${tag} `)}
                 </Typography>
             </Box>
             <Typography sx={classes.title} variant="h5" gutterBottom>

@@ -13,7 +13,7 @@ import {
 import ChipInput from "material-ui-chip-input";
 import { useNavigate } from "react-router-dom";
 
-import { getAllPosts } from "../../../feature/postSlice";
+import { getAllPosts, getPostsBySearch } from "../../../feature/postSlice";
 import PostList from "../../PostList/PostList";
 import Form from "../../Form/Form";
 import Pagination from "../../Pagination";
@@ -32,7 +32,13 @@ function HomePage() {
     }, [dispatch, currentId]);
 
     const searchPosts = () => {
-        if (search.trim()) {
+        if (search.trim() || tags) {
+            dispatch(getPostsBySearch({ search, tags: tags.join(",") }));
+            navigate(
+                `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(
+                    ","
+                )}`
+            );
         } else {
             navigate("/");
         }
