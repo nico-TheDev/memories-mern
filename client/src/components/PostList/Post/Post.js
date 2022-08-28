@@ -62,7 +62,7 @@ function Post({ post, setCurrentId }) {
     };
 
     return (
-        <Card sx={classes.card}>
+        <Card sx={classes.card} elevation={6} raised>
             <CardMedia
                 sx={classes.media}
                 image={post.selectedFile}
@@ -94,12 +94,22 @@ function Post({ post, setCurrentId }) {
                     {post.tags.map((tag) => `#${tag} `)}
                 </Typography>
             </Box>
-            <Typography sx={classes.title} variant="h5" gutterBottom>
+            <Typography sx={classes.title} variant="h5" gutterBottom noWrap>
                 {post.title}
             </Typography>
             <CardContent>
-                <Typography variant="body2" color="textSecondary" gutterBottom>
-                    {post.message}
+                <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    gutterBottom
+                    paragraph
+                >
+                    {post.message.length > 20
+                        ? `${post.message
+                              .split(" ")
+                              .splice(0, 20)
+                              .join(" ")}...`
+                        : post.message}
                 </Typography>
             </CardContent>
 

@@ -47,27 +47,31 @@ const authSlice = createSlice({
                 JSON.stringify({ email, name, picture, _id: googleId })
             );
             localStorage.setItem("token", JSON.stringify(action.payload));
-            state.user = { email, name, picture, _id: googleId };
+            return {
+                ...state,
+                user: { email, name, picture, _id: googleId },
+                token: JSON.stringify(action.payload),
+            };
         },
         LOGOUT: (state) => {
             localStorage.clear();
-            state.user = null;
+            return { user: null, token: null };
         },
         SIGNIN: (state, action) => {
             localStorage.setItem("user", JSON.stringify(action.payload.result));
             localStorage.setItem("token", JSON.stringify(action.payload.token));
-            return (state = {
+            return {
                 user: action.payload.result,
                 token: action.payload.token,
-            });
+            };
         },
         SIGNUP: (state, action) => {
             localStorage.setItem("user", JSON.stringify(action.payload.result));
             localStorage.setItem("token", JSON.stringify(action.payload.token));
-            return (state = {
+            return {
                 user: action.payload.result,
                 token: action.payload.token,
-            });
+            };
         },
     },
 });

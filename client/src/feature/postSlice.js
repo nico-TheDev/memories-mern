@@ -4,14 +4,17 @@ import toast from "react-hot-toast";
 
 // THUNKS | ASYNC CODE
 
-export const getAllPosts = () => {
+export const getAllPosts = (page) => {
     return async (dispatch) => {
         try {
-            const { data } = await api.fetchPosts();
-            dispatch(FETCH_ALL(data.data));
+            dispatch(START_LOADING());
+            const { data: res } = await api.fetchPosts(page);
+            dispatch(FETCH_ALL(res));
         } catch (err) {
             toast.error(err.message);
             console.log(err);
+        } finally {
+            dispatch(END_LOADING());
         }
     };
 };
@@ -19,11 +22,14 @@ export const getAllPosts = () => {
 export const getPostsBySearch = (searchQuery) => {
     return async (dispatch) => {
         try {
+            dispatch(START_LOADING());
             const { data } = await api.fetchPostsBySearch(searchQuery);
             dispatch(FETCH_BY_SEARCH(data.posts));
         } catch (err) {
             toast.error(err.message);
             console.log(err);
+        } finally {
+            dispatch(END_LOADING());
         }
     };
 };
@@ -90,24 +96,44 @@ export const likePost = (id) => {
 
 export const postSlice = createSlice({
     name: "posts",
-    initialState: [],
+    initialState: {
+        data: [],
+        isLoading: true,
+    },
     reducers: {
         FETCH_ALL: (state, action) => {
-            return action.payload;
+            return {
+                ...state,
+                data: action.payload.data,
+                currentPage: action.payload.currentPage,
+                numberOfPages: action.payload.numberOfPages,
+            };
         },
         FETCH_BY_SEARCH: (state, action) => {
-            return action.payload;
+            return { ...state, data: action.payload };
         },
         CREATE_POST: (state, action) => {
-            return [...state, action.payload];
+            return { ...state, data: [...state.data, action.payload] };
         },
         UPDATE_POST: (state, action) => {
-            return state.map((post) =>
-                post._id === action.payload._id ? action.payload : post
-            );
+            return {
+                ...state,
+                data: state.data.map((post) =>
+                    post._id === action.payload._id ? action.payload : post
+                ),
+            };
         },
         DELETE_POST: (state, action) => {
-            return state.filter((post) => post._id !== action.payload);
+            return {
+                ...state,
+                data: state.data.filter((post) => post._id !== action.payload),
+            };
+        },
+        START_LOADING: (state) => {
+            return { ...state, isLoading: true };
+        },
+        END_LOADING: (state) => {
+            return { ...state, isLoading: false };
         },
     },
 });
@@ -118,6 +144,8 @@ export const {
     UPDATE_POST,
     DELETE_POST,
     FETCH_BY_SEARCH,
+    START_LOADING,
+    END_LOADING,
 } = postSlice.actions;
 
 export default postSlice.reducer;

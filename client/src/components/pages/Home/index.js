@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
     Container,
@@ -11,9 +11,9 @@ import {
     Button,
 } from "@mui/material";
 import ChipInput from "material-ui-chip-input";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import { getAllPosts, getPostsBySearch } from "../../../feature/postSlice";
+import { getPostsBySearch } from "../../../feature/postSlice";
 import PostList from "../../PostList/PostList";
 import Form from "../../Form/Form";
 import Pagination from "../../Pagination";
@@ -24,15 +24,13 @@ function HomePage() {
     const [currentId, setCurrentId] = useState(null);
     const [tags, setTags] = useState([]);
     const [search, setSearch] = useState("");
+    const [params] = useSearchParams();
+    const page = params.get("page") || 1;
     const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(getAllPosts());
-    }, [dispatch, currentId]);
-
     const searchPosts = () => {
-        if (search.trim() || tags) {
+        if (search.trim() || !tags) {
             dispatch(getPostsBySearch({ search, tags: tags.join(",") }));
             navigate(
                 `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(
@@ -123,9 +121,11 @@ function HomePage() {
                             </Paper>
                         )}
 
-                        <Paper elevation={6} sx={classes.pagination}>
-                            <Pagination />
-                        </Paper>
+                        {!search && !tags.length && (
+                            <Paper elevation={6} sx={classes.pagination}>
+                                <Pagination page={page} />
+                            </Paper>
+                        )}
                     </Grid>
                 </Grid>
             </Container>

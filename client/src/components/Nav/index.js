@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
     AppBar,
     Avatar,
@@ -22,10 +22,10 @@ function Nav() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleLogout = () => {
+    const handleLogout = useCallback(() => {
         dispatch(LOGOUT());
         navigate("/");
-    };
+    }, [dispatch, navigate]);
 
     useEffect(() => {
         if (token) {
@@ -35,7 +35,7 @@ function Nav() {
                 handleLogout();
             }
         }
-    }, [location]);
+    }, [location, handleLogout, token]);
 
     return (
         <AppBar position="static" color="inherit" sx={classes.appBar}>

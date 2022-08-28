@@ -14,7 +14,7 @@ const App = () => {
     const user = useSelector((state) => state.auth.user);
 
     return (
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ paddingY: 4, paddingBottom: 6 }}>
             <Toaster />
             <Nav />
             <Routes>

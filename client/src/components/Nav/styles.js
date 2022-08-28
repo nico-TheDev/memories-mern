@@ -3,7 +3,7 @@ import { purple } from "@mui/material/colors";
 const style = {
     appBar: {
         borderRadius: 2,
-        margin: "30px 0",
+        marginBottom: "30px",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
