@@ -7,7 +7,7 @@ import Nav from "./components/Nav";
 // PAGES
 import HomePage from "./components/pages/Home";
 import AuthPage from "./components/pages/Auth";
-import PostDetails from "./components/PostDetails";
+import PostDetails from "./components/pages/PostDetails";
 import { useSelector } from "react-redux";
 
 const App = () => {

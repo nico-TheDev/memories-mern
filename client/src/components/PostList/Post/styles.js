@@ -42,10 +42,9 @@ const style = {
     title: {
         padding: "0 10px",
     },
-    cardActions: {
-        padding: "0 16px 8px 16px",
-        display: "flex",
-        justifyContent: "space-between",
+    cardAction: {
+        display: "block",
+        textAlign: "initial",
     },
 };
 export default style;

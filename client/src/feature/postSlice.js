@@ -19,6 +19,22 @@ export const getAllPosts = (page) => {
     };
 };
 
+export const getPost = (id) => {
+    return async (dispatch) => {
+        try {
+            dispatch(START_LOADING());
+            const { data: res } = await api.fetchPost(id);
+            console.log(res);
+            dispatch(FETCH_POST(res));
+        } catch (err) {
+            toast.error(err.message);
+            console.log(err);
+        } finally {
+            dispatch(END_LOADING());
+        }
+    };
+};
+
 export const getPostsBySearch = (searchQuery) => {
     return async (dispatch) => {
         try {
@@ -99,6 +115,7 @@ export const postSlice = createSlice({
     initialState: {
         data: [],
         isLoading: true,
+        post: null,
     },
     reducers: {
         FETCH_ALL: (state, action) => {
@@ -107,6 +124,12 @@ export const postSlice = createSlice({
                 data: action.payload.data,
                 currentPage: action.payload.currentPage,
                 numberOfPages: action.payload.numberOfPages,
+            };
+        },
+        FETCH_POST: (state, action) => {
+            return {
+                ...state,
+                post: action.payload.data,
             };
         },
         FETCH_BY_SEARCH: (state, action) => {
@@ -146,6 +169,7 @@ export const {
     FETCH_BY_SEARCH,
     START_LOADING,
     END_LOADING,
+    FETCH_POST,
 } = postSlice.actions;
 
 export default postSlice.reducer;

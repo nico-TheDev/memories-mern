@@ -7,6 +7,7 @@ import {
     Button,
     Typography,
     Box,
+    ButtonBase,
 } from "@mui/material";
 import moment from "moment";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -14,12 +15,14 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import classes from "./styles";
 import { deletePost, likePost } from "../../../feature/postSlice";
 
 function Post({ post, setCurrentId }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const user = useSelector((state) => state.auth.user);
 
     const handleEdit = () => {
@@ -33,6 +36,9 @@ function Post({ post, setCurrentId }) {
     const handleLike = () => {
         dispatch(likePost(post._id));
     };
+
+    const handleOpenPost = () => navigate(`/posts/${post._id}`);
+
     const likeCount = post.likes.length;
 
     const isOwner = user?._id === post?.creator;
@@ -63,57 +69,57 @@ function Post({ post, setCurrentId }) {
 
     return (
         <Card sx={classes.card} elevation={6} raised>
-            <CardMedia
-                sx={classes.media}
-                image={post.selectedFile}
-                title={post.title}
-            />
-
-            <Box sx={classes.overlay}>
-                <Typography variant="h6">{post.name}</Typography>
-                <Typography variant="body2">
-                    {moment(post.createdAt).fromNow()}
-                </Typography>
-            </Box>
-
-            {/* EDIT BUTTON */}
-            {isOwner && (
-                <Box sx={classes.overlay2}>
-                    <Button
-                        sx={{ color: "white" }}
-                        size="small"
-                        onClick={handleEdit}
-                    >
-                        <MoreHorizIcon fontSize="medium" />
-                    </Button>
+            <ButtonBase sx={classes.cardAction} onClick={handleOpenPost}>
+                <CardMedia
+                    sx={classes.media}
+                    image={post.selectedFile}
+                    title={post.title}
+                />
+                <Box sx={classes.overlay}>
+                    <Typography variant="h6">{post.name}</Typography>
+                    <Typography variant="body2">
+                        {moment(post.createdAt).fromNow()}
+                    </Typography>
                 </Box>
-            )}
 
-            <Box sx={classes.details}>
-                <Typography variant="body2" color="textSecondary">
-                    {post.tags.map((tag) => `#${tag} `)}
+                <Box sx={classes.details}>
+                    <Typography variant="body2" color="textSecondary">
+                        {post.tags.map((tag) => `#${tag} `)}
+                    </Typography>
+                </Box>
+                <Typography sx={classes.title} variant="h5" gutterBottom noWrap>
+                    {post.title}
                 </Typography>
-            </Box>
-            <Typography sx={classes.title} variant="h5" gutterBottom noWrap>
-                {post.title}
-            </Typography>
-            <CardContent>
-                <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    gutterBottom
-                    paragraph
-                >
-                    {post.message.length > 20
-                        ? `${post.message
-                              .split(" ")
-                              .splice(0, 20)
-                              .join(" ")}...`
-                        : post.message}
-                </Typography>
-            </CardContent>
+                <CardContent>
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        gutterBottom
+                        paragraph
+                    >
+                        {post.message.length > 20
+                            ? `${post.message
+                                  .split(" ")
+                                  .splice(0, 20)
+                                  .join(" ")}...`
+                            : post.message}
+                    </Typography>
+                </CardContent>
+            </ButtonBase>
 
             <CardActions sx={classes.cardActions}>
+                {/* EDIT BUTTON */}
+                {isOwner && (
+                    <Box sx={classes.overlay2}>
+                        <Button
+                            sx={{ color: "white" }}
+                            size="small"
+                            onClick={handleEdit}
+                        >
+                            <MoreHorizIcon fontSize="medium" />
+                        </Button>
+                    </Box>
+                )}
                 <Button
                     size="small"
                     color="primary"
