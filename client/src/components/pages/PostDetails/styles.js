@@ -34,6 +34,7 @@ const style = {
             sm: "column",
             lg: "row",
         },
+        gap: 4,
     },
     loadingPaper: {
         display: "flex",

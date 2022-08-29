@@ -5,27 +5,44 @@ import {
     CircularProgress,
     Divider,
     Box,
+    Grid,
 } from "@mui/material";
 import moment from "moment";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import classes from "./styles";
-import { getPost } from "../../../feature/postSlice";
+import { getPost, getPostsBySearch } from "../../../feature/postSlice";
 
 function PostDetails() {
     const dispatch = useDispatch();
     const navigation = useNavigate();
     const { id } = useParams();
-    const { post, isLoading } = useSelector((state) => state.posts);
+    const {
+        post,
+        isLoading,
+        data: posts,
+    } = useSelector((state) => state.posts);
 
     useEffect(() => {
         dispatch(getPost(id));
     }, [dispatch, id]);
 
+    useEffect(() => {
+        if (post) {
+            dispatch(
+                getPostsBySearch({
+                    tags: post.tags.join(","),
+                })
+            );
+        }
+    }, [dispatch, post]);
+
     if (!post && !isLoading) {
         navigation("/");
     }
+
+    const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
 
     if (isLoading)
         return (
@@ -77,6 +94,51 @@ function PostDetails() {
                         }
                         alt={post.title}
                     />
+                </Box>
+            </Box>
+
+            <Box sx={classes.section}>
+                <Typography variant="h5" gutterBottom>
+                    You might like
+                </Typography>
+                <Divider sx={{ margin: "20px 0" }} />
+                <Box sx={classes.recommendedPosts}>
+                    {recommendedPosts.length &&
+                        recommendedPosts.map((item) => (
+                            <Grid
+                                container
+                                spacing={2}
+                                as={Paper}
+                                onClick={() => navigation(`/posts/${item._id}`)}
+                            >
+                                <Grid item xs={12}>
+                                    <Typography variant="h6">
+                                        {item.title}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="body2">
+                                        Posted by:{item.name}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="body2">
+                                        {moment(item.createdAt).fromNow()}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <img
+                                        style={{
+                                            width: "100%",
+                                            height: "200px",
+                                            objectFit: "cover",
+                                        }}
+                                        src={item.selectedFile}
+                                        alt=""
+                                    />
+                                </Grid>
+                            </Grid>
+                        ))}
                 </Box>
             </Box>
         </Paper>
