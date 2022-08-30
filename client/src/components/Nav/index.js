@@ -10,7 +10,6 @@ import {
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import decode from "jwt-decode";
 
-import memories from "../../images/memories.png";
 import classes from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGOUT } from "../../feature/authSlice";
@@ -49,12 +48,6 @@ function Nav() {
                 >
                     Memoir
                 </Typography>
-                <img
-                    src={memories}
-                    alt="memories"
-                    height="50"
-                    sx={classes.image}
-                />
             </Box>
 
             <Toolbar sx={classes.toolbar}>

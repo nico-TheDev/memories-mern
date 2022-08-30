@@ -24,7 +24,6 @@ export const getPost = (id) => {
         try {
             dispatch(START_LOADING());
             const { data: res } = await api.fetchPost(id);
-            console.log(res);
             dispatch(FETCH_POST(res));
         } catch (err) {
             toast.error(err.message);

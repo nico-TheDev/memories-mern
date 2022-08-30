@@ -5,18 +5,18 @@ import {
     CircularProgress,
     Divider,
     Box,
-    Grid,
 } from "@mui/material";
 import moment from "moment";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import classes from "./styles";
 import { getPost, getPostsBySearch } from "../../../feature/postSlice";
+import CommentSection from "./CommentSection";
+import Recommendation from "./Recommendation";
 
 function PostDetails() {
     const dispatch = useDispatch();
-    const navigation = useNavigate();
     const { id } = useParams();
     const {
         post,
@@ -26,7 +26,7 @@ function PostDetails() {
 
     useEffect(() => {
         dispatch(getPost(id));
-    }, [dispatch, id]);
+    }, [id]);
 
     useEffect(() => {
         if (post) {
@@ -36,13 +36,10 @@ function PostDetails() {
                 })
             );
         }
-    }, [dispatch, post]);
+    }, [post]);
 
-    if (!post && !isLoading) {
-        navigation("/");
-    }
-
-    const recommendedPosts = posts.filter(({ _id }) => _id !== post._id);
+    const recommendedPosts =
+        posts.length !== 0 && posts.filter(({ _id }) => _id !== post?._id);
 
     if (isLoading)
         return (
@@ -56,7 +53,7 @@ function PostDetails() {
             <Box sx={classes.card}>
                 <Box sx={classes.section}>
                     <Typography variant="h3" component="h2">
-                        {post.title}
+                        {post?.title}
                     </Typography>
                     <Typography
                         gutterBottom
@@ -64,35 +61,33 @@ function PostDetails() {
                         color="textSecondary"
                         component="h2"
                     >
-                        {post.tags.map((tag) => `#${tag} `)}
+                        {post?.tags.map((tag) => `#${tag} `)}
                     </Typography>
                     <Typography gutterBottom variant="body1" component="p">
-                        {post.message}
+                        {post?.message}
                     </Typography>
                     <Typography variant="h6">
-                        Created by: {post.name}
+                        Created by: {post?.name}
                     </Typography>
                     <Typography variant="body1">
-                        {moment(post.createdAt).fromNow()}
+                        {moment(post?.createdAt).fromNow()}
                     </Typography>
                     <Divider style={{ margin: "20px 0" }} />
                     <Typography variant="body1">
                         <strong>Realtime Chat - coming soon!</strong>
                     </Typography>
                     <Divider sx={{ margin: "20px 0" }} />
-                    <Typography variant="body1">
-                        <strong>Comments - coming soon!</strong>
-                    </Typography>
+                    <CommentSection post={post} />
                     <Divider sx={{ margin: "20px 0" }} />
                 </Box>
                 <Box sx={classes.imageSection}>
                     <img
                         style={classes.media}
                         src={
-                            post.selectedFile ||
+                            post?.selectedFile ||
                             "https://user-images.githubusercontent.com/194400/49531010-48dad180-f8b1-11e8-8d89-1e61320e1d82.png"
                         }
-                        alt={post.title}
+                        alt={post?.title}
                     />
                 </Box>
             </Box>
@@ -105,39 +100,7 @@ function PostDetails() {
                 <Box sx={classes.recommendedPosts}>
                     {recommendedPosts.length &&
                         recommendedPosts.map((item) => (
-                            <Grid
-                                container
-                                spacing={2}
-                                as={Paper}
-                                onClick={() => navigation(`/posts/${item._id}`)}
-                            >
-                                <Grid item xs={12}>
-                                    <Typography variant="h6">
-                                        {item.title}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography variant="body2">
-                                        Posted by:{item.name}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Typography variant="body2">
-                                        {moment(item.createdAt).fromNow()}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <img
-                                        style={{
-                                            width: "100%",
-                                            height: "200px",
-                                            objectFit: "cover",
-                                        }}
-                                        src={item.selectedFile}
-                                        alt=""
-                                    />
-                                </Grid>
-                            </Grid>
+                            <Recommendation item={item} key={item._id} />
                         ))}
                 </Box>
             </Box>
