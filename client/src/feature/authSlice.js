@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import jwtDecode from "jwt-decode";
+import toast from "react-hot-toast";
 
 import * as api from "../api";
 
@@ -14,22 +15,35 @@ const initialState = {
 
 export const signin = (formData) => {
     return async (dispatch, state) => {
+        let loader;
         try {
+            loader = toast.loading("Logging in");
             const { data } = await api.signIn(formData);
             dispatch(SIGNIN(data));
+            toast.success("Login Successful");
         } catch (err) {
             console.log(err);
+            toast.error(err.response.data.message);
+        } finally {
+            toast.dismiss(loader);
         }
     };
 };
 
 export const signup = (formData) => {
     return async (dispatch, state) => {
+        let loader;
         try {
+            loader = toast.loading("Creating Account");
             const { data } = await api.signUp(formData);
             dispatch(SIGNUP(data));
+            toast.dismiss(loader);
+            toast.success("Account Created");
         } catch (err) {
             console.log(err);
+            toast.error(err.response.data.message);
+        } finally {
+            toast.dismiss(loader);
         }
     };
 };
@@ -40,7 +54,7 @@ const authSlice = createSlice({
     reducers: {
         GET_USER: (state, action) => {
             const googleUser = jwtDecode(action.payload);
-            console.log(googleUser);
+            // console.log(googleUser);
             const { email, name, picture, sub: googleId } = googleUser;
             localStorage.setItem(
                 "user",

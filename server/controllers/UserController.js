@@ -13,7 +13,7 @@ export const signin_post = async (req, res) => {
 
         // USE BCRYPT TO COMPARE PASSWORDS
 
-        const isPasswordCorrect = bcrypt.compare(
+        const isPasswordCorrect = await bcrypt.compare(
             password,
             existingUser.password
         );

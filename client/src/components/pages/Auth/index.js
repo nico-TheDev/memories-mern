@@ -37,8 +37,6 @@ function AuthPage() {
     };
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
-
         if (isSignup) {
             // SIGN UP LOGIC
             dispatch(signup(formData));
@@ -46,8 +44,6 @@ function AuthPage() {
             // SIGN IN LOGIC
             dispatch(signin(formData));
         }
-
-        navigate("/");
     };
 
     const handleChange = (e) => {
