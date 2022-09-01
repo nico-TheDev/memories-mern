@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Card,
     CardActions,
@@ -24,6 +24,9 @@ function Post({ post, setCurrentId }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.auth.user);
+    const [likes, setLikes] = useState(post?.likes);
+    const isOwner = user?._id === post?.creator;
+    const hasLikedPost = post.likes.find((like) => like === user?._id);
 
     const handleEdit = () => {
         setCurrentId(post._id);
@@ -33,19 +36,22 @@ function Post({ post, setCurrentId }) {
         dispatch(deletePost(post._id));
     };
 
-    const handleLike = () => {
+    const handleLike = async () => {
         dispatch(likePost(post._id));
+        if (hasLikedPost) {
+            setLikes(post.likes.filter((id) => id !== user._id));
+        } else {
+            setLikes([...post.likes, user._id]);
+        }
     };
 
     const handleOpenPost = () => navigate(`/posts/${post._id}`);
 
-    const likeCount = post.likes.length;
-
-    const isOwner = user?._id === post?.creator;
-
     const Likes = () => {
+        const likeCount = likes.length;
+
         if (likeCount > 0) {
-            return post.likes.find((like) => like === user?._id) ? (
+            return hasLikedPost ? (
                 <>
                     <ThumbUpAltIcon fontSize="small" /> &nbsp;{" "}
                     {likeCount > 2

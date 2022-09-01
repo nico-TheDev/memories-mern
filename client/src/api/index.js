@@ -27,11 +27,14 @@ export const createPost = (newPost) =>
     apiInstance.post("/posts", { data: newPost });
 
 export const updatePost = (id, updatedPost) =>
-    apiInstance.patch(`${"/posts"}/${id}`, { data: updatedPost });
+    apiInstance.patch(`/posts/${id}`, { data: updatedPost });
 
-export const deletePost = (id) => apiInstance.delete(`${"/posts"}/${id}`);
+export const deletePost = (id) => apiInstance.delete(`/posts/${id}`);
 
-export const likePost = (id) => apiInstance.patch(`${"/posts"}/${id}/like`);
+export const likePost = (id) => apiInstance.patch(`/posts/${id}/like`);
+
+export const commentPost = (comment, id) =>
+    apiInstance.post(`/posts/${id}/commentPost`, { data: comment });
 
 // AUTH
 

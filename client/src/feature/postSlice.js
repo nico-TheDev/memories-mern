@@ -97,13 +97,23 @@ export const deletePost = (id) => {
 export const likePost = (id) => {
     return async (dispatch) => {
         try {
-            const loader = toast.loading("Liking Memoir");
             const { data: updatedPost } = await api.likePost(id);
             dispatch(UPDATE_POST(updatedPost));
-            toast.dismiss(loader);
-            toast.success("Liked Successful");
         } catch (err) {
             toast.error(err.message);
+            console.log(err);
+        }
+    };
+};
+
+export const commentPost = (comment, id) => {
+    return async (dispatch) => {
+        try {
+            const { data: post } = await api.commentPost(comment, id);
+            dispatch(COMMENT_POST(post));
+
+            return post.comments;
+        } catch (err) {
             console.log(err);
         }
     };
@@ -151,6 +161,17 @@ export const postSlice = createSlice({
                 data: state.data.filter((post) => post._id !== action.payload),
             };
         },
+        COMMENT_POST: (state, action) => {
+            return {
+                ...state,
+                data: state.data.map((item) => {
+                    if (item._id === action.payload._id) {
+                        return action.payload;
+                    }
+                    return item;
+                }),
+            };
+        },
         START_LOADING: (state) => {
             return { ...state, isLoading: true };
         },
@@ -169,6 +190,7 @@ export const {
     START_LOADING,
     END_LOADING,
     FETCH_POST,
+    COMMENT_POST,
 } = postSlice.actions;
 
 export default postSlice.reducer;
