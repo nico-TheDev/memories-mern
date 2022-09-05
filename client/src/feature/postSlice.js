@@ -109,12 +109,15 @@ export const likePost = (id) => {
 export const commentPost = (comment, id) => {
     return async (dispatch) => {
         try {
+            const loader = toast.loading("Sending Comment...");
             const { data: post } = await api.commentPost(comment, id);
             dispatch(COMMENT_POST(post));
-
+            toast.dismiss(loader);
+            toast.success("Commented Successfully");
             return post.comments;
         } catch (err) {
             console.log(err);
+            toast.error(err.message);
         }
     };
 };
