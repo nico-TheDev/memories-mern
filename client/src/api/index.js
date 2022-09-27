@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiInstance = axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: process.env.REACT_APP_BASE_URL,
 });
 
 apiInstance.interceptors.request.use((req) => {
@@ -18,13 +18,10 @@ export const fetchPost = (id) => apiInstance.get(`/posts/${id}`);
 
 export const fetchPostsBySearch = (searchQuery) =>
     apiInstance.get(
-        `/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${
-            searchQuery.tags
-        }`
+        `/posts/search?searchQuery=${searchQuery.search || "none"}&tags=${searchQuery.tags}`
     );
 
-export const createPost = (newPost) =>
-    apiInstance.post("/posts", { data: newPost });
+export const createPost = (newPost) => apiInstance.post("/posts", { data: newPost });
 
 export const updatePost = (id, updatedPost) =>
     apiInstance.patch(`/posts/${id}`, { data: updatedPost });
@@ -38,7 +35,5 @@ export const commentPost = (comment, id) =>
 
 // AUTH
 
-export const signIn = (formData) =>
-    apiInstance.post("/user/signin", { data: formData });
-export const signUp = (formData) =>
-    apiInstance.post("/user/signup", { data: formData });
+export const signIn = (formData) => apiInstance.post("/user/signin", { data: formData });
+export const signUp = (formData) => apiInstance.post("/user/signup", { data: formData });
